@@ -92,7 +92,7 @@ function love.draw()
     love.graphics.rectangle("fill", 0, cameraY, 800, 600)
 
     -- Draw ground with gradual transition 
-      -- Draw ground with gradual transition 
+    -- Draw ground with gradual transition 
     local groundTransitionFactor = math.min((-cameraY) / 1000, 1) -- Transition over 1000 pixels
     groundTransitionFactor = math.max(0, groundTransitionFactor)
     local groundAlpha = 1 - groundTransitionFactor -- Fade out the ground as the rocket rises
