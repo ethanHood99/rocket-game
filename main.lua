@@ -97,8 +97,9 @@ function love.draw()
     groundTransitionFactor = math.max(0, groundTransitionFactor)
     local groundAlpha = 1 - groundTransitionFactor -- Fade out the ground as the rocket rises
 
+
     love.graphics.setColor(0.1, 0.3, 0.1, groundAlpha) 
-    love.graphics.rectangle("fill", 0, 600, 800, groundHeight) 
+    love.graphics.rectangle("fill", 0, 600 - groundHeight, 800, groundHeight) 
     
     -- Draw rocket
     love.graphics.setColor(1, 1, 1)
