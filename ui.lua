@@ -17,7 +17,7 @@ function UI.draw()
     if Game.gameOver then
         -- Reset the camera transformation to draw in screen space
         Camera.resetTransform()
-        
+
         love.graphics.setColor(1, 0, 0)
         love.graphics.printf("Game Over! Press R to Restart", 0, 250, 800, "center")
     end

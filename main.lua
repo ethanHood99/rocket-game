@@ -8,6 +8,7 @@ function love.load()
     require("ground")
     require("camera")
     require("ui")
+    require("currency")
 
     Game.load()
 end

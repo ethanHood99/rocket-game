@@ -9,6 +9,7 @@ function Game.reset()
     Rocket.reset()
     Ground.reset()
     Camera.reset()
+    Currency.reset()
 
     Game.gameOver = false
     Game.gameStarted = false
@@ -26,7 +27,11 @@ function Game.update(dt)
 
     Rocket.update(dt)
     Camera.update(dt)
+    Currency.update(dt)
 
+    if math.random() < 0.02 then -- 10% chance to spawn a new currency object each frame
+        Currency.spawn()
+    end
     -- Game over if rocket falls below the fixed screen height (600)
     if Rocket.y > 600 + Camera.y then
         Game.gameOver = true
@@ -40,11 +45,24 @@ function Game.draw()
     love.graphics.setColor(0.53, 0.81, 0.92)
     love.graphics.rectangle("fill", 0, Camera.y, 800, 600)
 
+    Currency.draw()
     Ground.draw()
     Rocket.draw()
-    UI.draw()
 
+    -- Reset transformations to draw in screen space
     Camera.resetTransform()
+
+     -- Draw the counter in the top-right corner
+     local screenWidth = love.graphics.getWidth()
+     local text = tostring(Currency.counter)
+     local textWidth = love.graphics.getFont():getWidth(text) -- Get the width of the text
+     local margin = 10 -- Margin from the edge of the screen
+ 
+     love.graphics.setColor(253,220,92) -- Set text color to white
+     love.graphics.print(text, screenWidth - textWidth - margin, margin)
+ 
+     -- Draw UI (e.g., "Press Space to Start" and "Game Over")
+     UI.draw()
 end
 
 function Game.keypressed(key)
