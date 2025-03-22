@@ -3,6 +3,9 @@ Game = {}
 function Game.load()
     -- Initialize game state
     Game.reset()
+
+    -- Create a larger font for the altitude meter
+    Game.font = love.graphics.newFont(30)
 end
 
 function Game.reset()
@@ -13,6 +16,7 @@ function Game.reset()
 
     Game.gameOver = false
     Game.gameStarted = false
+    Game.altitude = 0 
 end
 
 function Game.update(dt)
@@ -28,6 +32,8 @@ function Game.update(dt)
     Rocket.update(dt)
     Camera.update(dt)
     Currency.update(dt)
+
+    Game.altitude = math.max(Game.altitude, -Camera.y)
 
     if math.random() < 0.02 then -- 10% chance to spawn a new currency object each frame
         Currency.spawn()
@@ -51,6 +57,16 @@ function Game.draw()
 
     -- Reset transformations to draw in screen space
     Camera.resetTransform()
+
+    -- Draw altitude meter in the top middle of the screen
+    local altitudeText = "Altitude: " .. math.floor(Game.altitude) .. "M"
+    love.graphics.setFont(Game.font)
+    local textWidth = love.graphics.getFont():getWidth(altitudeText)
+    local screenWidth = love.graphics.getWidth()
+    local margin = 20
+
+    love.graphics.setColor(1,1,1)
+    love.graphics.print(altitudeText, (screenWidth - textWidth) / 2, margin)
 
      -- Draw the counter in the top-right corner
      local screenWidth = love.graphics.getWidth()
