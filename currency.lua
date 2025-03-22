@@ -29,7 +29,6 @@ function Currency.update(dt)
             -- Mark the currency as collected and increment the counter
             currency.collected = true
             Currency.counter = Currency.counter + 1
-            print("Collected coin! Total:", Currency.counter) -- Debug print
         end
 
         -- Remove collected currency objects from the table
@@ -45,7 +44,6 @@ function Currency.draw()
         if not currency.collected then
             love.graphics.setColor(178,122,1) -- Gold color
             love.graphics.rectangle("fill", currency.x, currency.y, currency.size, currency.size)
-            print("Drawing coin at:", currency.x, currency.y) -- Debug print
         end
     end
 end
