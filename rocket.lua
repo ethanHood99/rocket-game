@@ -8,6 +8,7 @@ function Rocket.reset()
     Rocket.velocityY = 0
     Rocket.gravity = 500
     Rocket.jumpForce = -300
+    Rocket.health = 100
 end
 
 function Rocket.update(dt)

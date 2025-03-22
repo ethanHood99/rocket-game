@@ -5,7 +5,7 @@ function Game.load()
     Game.reset()
 
     -- Create a larger font for the altitude meter
-    Game.font = love.graphics.newFont(30)
+    Game.font = love.graphics.newFont(20)
 end
 
 function Game.reset()
@@ -13,6 +13,7 @@ function Game.reset()
     Ground.reset()
     Camera.reset()
     Currency.reset()
+    Asteroid.reset()
 
     Game.gameOver = false
     Game.gameStarted = false
@@ -32,14 +33,24 @@ function Game.update(dt)
     Rocket.update(dt)
     Camera.update(dt)
     Currency.update(dt)
+    Asteroid.update(dt)
 
     Game.altitude = math.max(Game.altitude, -Camera.y)
 
-    if math.random() < 0.02 then -- 10% chance to spawn a new currency object each frame
+    if math.random() < 0.02 then -- 2% chance to spawn a new currency object each frame
         Currency.spawn()
     end
+
+    if math.random() < 0.005 then --- 0.5 % chance to spawn a new asteroid
+        Asteroid.spawn()
+    end
+
     -- Game over if rocket falls below the fixed screen height (600)
     if Rocket.y > 600 + Camera.y then
+        Game.gameOver = true
+    end
+
+    if Rocket.health == 0 then
         Game.gameOver = true
     end
 end
@@ -54,6 +65,7 @@ function Game.draw()
     Currency.draw()
     Ground.draw()
     Rocket.draw()
+    Asteroid.draw()
 
     -- Reset transformations to draw in screen space
     Camera.resetTransform()
@@ -76,7 +88,14 @@ function Game.draw()
  
      love.graphics.setColor(253,220,92) -- Set text color to white
      love.graphics.print(text, screenWidth - textWidth - margin, margin)
- 
+    
+
+     --Draw the Rocket health in the top left hand corner of the screen
+    text = "Rocket Health: " .. math.floor(Rocket.health)
+    margin = 20
+
+    love.graphics.setColor(253, 220, 92)
+    love.graphics.print(text, margin, margin)
      -- Draw UI (e.g., "Press Space to Start" and "Game Over")
      UI.draw()
 end
