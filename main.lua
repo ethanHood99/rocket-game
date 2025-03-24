@@ -10,6 +10,8 @@ function love.load()
     require("ui")
     require("currency")
     require("asteroids")
+    require("aliens")
+    require("laser")
 
     Game.load()
 end

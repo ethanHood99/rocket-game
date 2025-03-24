@@ -14,6 +14,8 @@ function Game.reset()
     Camera.reset()
     Currency.reset()
     Asteroid.reset()
+    Aliens.reset()
+    Laser.reset()
 
     Game.gameOver = false
     Game.gameStarted = false
@@ -34,6 +36,8 @@ function Game.update(dt)
     Camera.update(dt)
     Currency.update(dt)
     Asteroid.update(dt)
+    Aliens.update(dt)
+    Laser.update(dt)
 
     Game.altitude = math.max(Game.altitude, -Camera.y)
 
@@ -45,12 +49,16 @@ function Game.update(dt)
         Asteroid.spawn()
     end
 
+    if math.random() < 0.0005 then -- 0.05% chance to spawn aliens
+        Aliens.spawn()
+    end
+
     -- Game over if rocket falls below the fixed screen height (600)
     if Rocket.y > 600 + Camera.y then
         Game.gameOver = true
     end
 
-    if Rocket.health == 0 then
+    if Rocket.health <= 0 then
         Game.gameOver = true
     end
 end
@@ -66,6 +74,8 @@ function Game.draw()
     Ground.draw()
     Rocket.draw()
     Asteroid.draw()
+    Aliens.draw()
+    Laser.draw()
 
     -- Reset transformations to draw in screen space
     Camera.resetTransform()
