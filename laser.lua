@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- Laser that comes out of alien space ship
+
 Laser = {}
 
 function Laser.reset()
@@ -24,20 +28,14 @@ function Laser.update(dt)
         laser.y = laser.y + laser.speed * dt
 
         -- Check for collision with rocket
-        if not laser.hit and
-           Rocket.x < laser.x + laser.width and
-           Rocket.x + Rocket.size > laser.x and
-           Rocket.y < laser.y + laser.height and
-           Rocket.y + Rocket.size > laser.y then
+        if Utils.checkCollision(laser) then
             laser.hit = true
             Rocket.health = Rocket.health - 10 -- Deduct health once
             table.remove(Laser.objects, i) -- Remove immediately after hit
         end
 
         -- Remove lasers that go off-screen
-        if laser.y > 600 then
-            table.remove(Laser.objects, i)
-        end
+        Utils.remove(laser, Laser)
     end
 end
 

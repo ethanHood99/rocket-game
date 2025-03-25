@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- File that handles the rocket object
+
 Rocket = {}
 
 function Rocket.reset()

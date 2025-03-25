@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- The ground file
+
 Ground = {}
 
 function Ground.reset()

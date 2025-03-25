@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- file that controls the camera object
+
 Camera = {}
 
 function Camera.reset()

@@ -1,4 +1,12 @@
+-- Ethan Hood
+-- 3/25/2025
+-- Main game file that uses all other assets
+
 Game = {}
+
+CURRENCY_RATE = 0.02
+ASTEROID_RATE = 0.005
+ALIENS_RATE = 0.0005
 
 function Game.load()
     -- Initialize game state
@@ -41,17 +49,9 @@ function Game.update(dt)
 
     Game.altitude = math.max(Game.altitude, -Camera.y)
 
-    if math.random() < 0.02 then -- 2% chance to spawn a new currency object each frame
-        Currency.spawn()
-    end
-
-    if math.random() < 0.005 then --- 0.5 % chance to spawn a new asteroid
-        Asteroid.spawn()
-    end
-
-    if math.random() < 0.0005 then -- 0.05% chance to spawn aliens
-        Aliens.spawn()
-    end
+    Utils.spawn(Currency, CURRENCY_RATE)
+    Utils.spawn(Asteroid, ASTEROID_RATE)
+    Utils.spawn(Aliens, ALIENS_RATE)
 
     -- Game over if rocket falls below the fixed screen height (600)
     if Rocket.y > 600 + Camera.y then

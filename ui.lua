@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- General UI of the entire game
+
 UI = {}
 
 function UI.reset()

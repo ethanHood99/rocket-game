@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- file that controls the alien file
+
 Aliens = {}
 
 function Aliens.reset()
@@ -28,11 +32,7 @@ function Aliens.update(dt)
         -- Side to side movement
         alien.x = alien.x + alien.speed * alien.direction * dt
 
-        if not alien.hit and
-            Rocket.x < alien.x + alien.width and
-            Rocket.x + Rocket.size > alien.x and
-            Rocket.y < alien.y + alien.height and
-            Rocket.y + Rocket.size > alien.y then
+        if Utils.checkCollision(alien) then
                 alien.hit = true
                 Rocket.health = Rocket.health - 100
                 table.remove(Aliens.objects, i)
@@ -51,9 +51,7 @@ function Aliens.update(dt)
         end
 
         -- Remove aliens that go off-screen (optional)
-        if alien.y > 600 then
-            table.remove(Aliens.objects, i)
-        end
+        Utils.remove(alien, Aliens)
     end
 end
 
