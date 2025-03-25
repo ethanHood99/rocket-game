@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- Currency file that makes the currency system work
+
 Currency = {}
 
 function Currency.reset()
@@ -10,8 +14,9 @@ function Currency.spawn()
     local currency = {
         x = math.random(0, 800), -- Random x position within the screen width
         y = Camera.y - math.random(100, 300), -- Random y position above the current camera view
-        size = 20,
-        collected = false -- Track if the currency has been collected
+        width = 20,
+        height = 20,
+        hit = false -- Track if the currency has been hit
     }
     table.insert(Currency.objects, currency) -- Add the new currency object to the tableend
 end
@@ -21,20 +26,19 @@ function Currency.update(dt)
         local currency = Currency.objects[i]
 
         -- Check for collision with the rocket
-        if not currency.collected and
-           Rocket.x < currency.x + currency.size and
-           Rocket.x + Rocket.size > currency.x and
-           Rocket.y < currency.y + currency.size and
-           Rocket.y + Rocket.size > currency.y then
+        if Utils.checkCollision(currency) then
             -- Mark the currency as collected and increment the counter
-            currency.collected = true
+            currency.hit = true
             Currency.counter = Currency.counter + 1
         end
 
         -- Remove collected currency objects from the table
-        if currency.collected then
+        if currency.hit then
             table.remove(Currency.objects, i)
         end
+
+        -- Remove currency that went off screen
+        Utils.remove(currency, Currency)
     end
 end
 
@@ -43,7 +47,7 @@ function Currency.draw()
     for _, currency in ipairs(Currency.objects) do
         if not currency.collected then
             love.graphics.setColor(178,122,1) -- Gold color
-            love.graphics.rectangle("fill", currency.x, currency.y, currency.size, currency.size)
+            love.graphics.rectangle("fill", currency.x, currency.y, currency.width, currency.height)
         end
     end
 end

@@ -1,3 +1,7 @@
+-- Ethan Hood
+-- 3/25/2025
+-- file that controls the asteroid file
+
 Asteroid = {}
 
 function Asteroid.reset()
@@ -9,7 +13,8 @@ function Asteroid.spawn()
     local asteroids = {
         x = math.random(0, 800),
         y = Camera.y - math.random(100, 300),
-        size = 20,
+        width = 20,
+        height = 20,
         hit = false
     }
     table.insert(Asteroid.objects, asteroids)
@@ -20,11 +25,7 @@ function Asteroid.update(dt)
         local asteroid = Asteroid.objects[i]
 
         -- Check for collision with rocket
-        if not asteroid.hit and
-            Rocket.x < asteroid.x + asteroid.size and
-            Rocket.x + Rocket.size > asteroid.x and
-            Rocket.y < asteroid.y + asteroid.size and
-            Rocket.y + Rocket.size > asteroid.y then
+        if Utils.checkCollision(asteroid) then
                 asteroid.hit = true
             end
 
@@ -33,6 +34,9 @@ function Asteroid.update(dt)
             Rocket.health = Rocket.health - 10
             table.remove(Asteroid.objects, i)
         end
+
+        -- Remove asteroids that are now off screen
+        Utils.remove(asteroid, Asteroid)
     end
 end
 
@@ -41,7 +45,7 @@ function Asteroid.draw()
     for _, asteroid in ipairs(Asteroid.objects) do 
         if not asteroid.hit then
             love.graphics.setColor(0, 0, 0)
-            love.graphics.rectangle("fill", asteroid.x, asteroid.y, asteroid.size, asteroid.size)
+            love.graphics.rectangle("fill", asteroid.x, asteroid.y, asteroid.width, asteroid.height)
         end
     end
 end

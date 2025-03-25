@@ -1,8 +1,13 @@
+-- Ethan Hood
+-- 3/25/2025
+-- Loads all other files
+
 function love.load()
     love.window.setTitle("Rocket Game")
     love.window.setMode(800, 600)
 
     -- Load modules
+    require("utils")
     require("game")
     require("rocket")
     require("ground")
