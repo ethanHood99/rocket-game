@@ -1,6 +1,6 @@
 -- Ethan Hood
 -- 3/25/2025
--- file that controls the asteroid file
+-- file that controls the asteroid 
 
 Asteroid = {}
 

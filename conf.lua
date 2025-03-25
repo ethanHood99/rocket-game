@@ -3,6 +3,6 @@
 -- Configuration file
 
 function love.conf(t)
-    t.version = "0.1.4"
+    t.version = "0.2.0"
     t.console = true
 end
