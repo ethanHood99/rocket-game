@@ -12,6 +12,12 @@ function Game.load()
     -- Initialize game state
     Game.reset()
 
+    -- Start loading currency frames
+    Currency.load()
+    
+    -- Set up a loading check
+    Game.loadingTimer = 0
+
     -- Create a larger font for the altitude meter
     Game.font = love.graphics.newFont(20)
 end
@@ -33,6 +39,13 @@ end
 function Game.update(dt)
     if Game.gameOver then return end
 
+    if not Game.assetsLoaded then
+        Game.loadingTimer = Game.loadingTimer + dt
+        if Currency.loadedFrames >= 499 then
+            Game.assetsLoaded = true
+        end
+        return
+    end
     -- Start the game when space is first pressed
     if not Game.gameStarted and love.keyboard.isDown("space") then
         Game.gameStarted = true
@@ -64,6 +77,13 @@ function Game.update(dt)
 end
 
 function Game.draw()
+    if not Game.assetsLoaded then
+        love.graphics.setColor(1,1,1)
+        local progress = math.floor((Currency.loadedFrames / 499) * 100)
+        love.graphics.print("Loading coins: " .. progress .. "%", 350, 300)
+        return
+    end
+
     Camera.apply()
 
     -- Draw background

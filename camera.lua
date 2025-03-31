@@ -1,6 +1,6 @@
 -- Ethan Hood
 -- 3/25/2025
--- file that controls the camera object
+-- File that controls the camera object
 
 Camera = {}
 

@@ -1,53 +1,102 @@
--- Ethan Hood
--- 3/25/2025
--- Currency file that makes the currency system work
-
-Currency = {}
+Currency = {
+    frames = {},          -- Stores all animation frame images
+    animationSpeed = 0.03, -- Seconds per frame
+    loadedFrames = 0      -- Track how many frames we've loaded
+}
 
 function Currency.reset()
-    Currency.counter = 0 -- Total collected currency
-    Currency.objects = {} -- Table to store individual currency objects
+    Currency.counter = 0
+    Currency.objects = {}
+end
+
+function Currency.load()
+    -- Load frames in a staggered way to prevent freezing
+    Currency.loadNextFrame()
+end
+
+function Currency.loadNextFrame()
+    -- Load frames one by one to prevent stuttering
+    if Currency.loadedFrames < 499 then
+        Currency.loadedFrames = Currency.loadedFrames + 1
+        local framePath = string.format("C:\\Users\\ethan\\Development\\Love2d-tests\\rocket-game\\Assets\\TBG 2D Game commission folder\\Assets\\CoinFrames\\1_%04d.png", Currency.loadedFrames)
+        
+        -- Use a placeholder if frame doesn't exist
+        local success, image = pcall(love.graphics.newImage, framePath)
+        if success then
+            table.insert(Currency.frames, image)
+        else
+            -- Create a colored placeholder if frame is missing
+            local placeholder = love.graphics.newCanvas(32, 32)
+            love.graphics.setCanvas(placeholder)
+            love.graphics.clear({178/255, 122/255, 1/255})
+            love.graphics.setCanvas()
+            table.insert(Currency.frames, placeholder)
+        end
+        
+        -- Schedule next frame load
+        if Currency.loadedFrames < 499 then
+            love.timer.sleep(0.001) -- Tiny delay to prevent freezing
+            Currency.loadNextFrame()
+        end
+    end
 end
 
 function Currency.spawn()
-    -- Spawn a new currency object at a random position above the current camera view
     local currency = {
-        x = math.random(0, 800), -- Random x position within the screen width
-        y = Camera.y - math.random(100, 300), -- Random y position above the current camera view
-        width = 20,
-        height = 20,
-        hit = false -- Track if the currency has been hit
+        x = math.random(0, 800),
+        y = Camera.y - math.random(100, 300),
+        width = 32,
+        height = 32,
+        hit = false,
+        currentFrame = math.random(1, #Currency.frames > 0 and #Currency.frames or 1),
+        animationTimer = 0,
+        scale = 0.8 + math.random() * 0.4,
     }
-    table.insert(Currency.objects, currency) -- Add the new currency object to the tableend
+    table.insert(Currency.objects, currency)
 end
 
 function Currency.update(dt)
+    -- Don't animate if frames aren't loaded yet
+    if #Currency.frames == 0 then return end
+    
     for i = #Currency.objects, 1, -1 do
         local currency = Currency.objects[i]
+        
+        -- Update animation only if we have frames
+        currency.animationTimer = currency.animationTimer + dt
+        if currency.animationTimer >= Currency.animationSpeed then
+            currency.animationTimer = 0
+            currency.currentFrame = (currency.currentFrame % #Currency.frames) + 1
+        end
 
-        -- Check for collision with the rocket
+        -- Existing collision logic
         if Utils.checkCollision(currency) then
-            -- Mark the currency as collected and increment the counter
             currency.hit = true
             Currency.counter = Currency.counter + 1
         end
 
-        -- Remove collected currency objects from the table
         if currency.hit then
             table.remove(Currency.objects, i)
         end
 
-        -- Remove currency that went off screen
         Utils.remove(currency, Currency)
     end
 end
 
 function Currency.draw()
-    -- Draw all currency objects
     for _, currency in ipairs(Currency.objects) do
-        if not currency.collected then
-            love.graphics.setColor(178,122,1) -- Gold color
-            love.graphics.rectangle("fill", currency.x, currency.y, currency.width, currency.height)
+        if not currency.hit and #Currency.frames > 0 then
+            --love.graphics.setColor(1, 1, 1)
+            love.graphics.draw(
+                Currency.frames[currency.currentFrame],
+                currency.x + currency.width/2, 
+                currency.y + currency.height/2,
+                currency.rotation,
+                currency.scale,
+                currency.scale,
+                currency.width/2,
+                currency.height/2
+            )
         end
     end
 end
